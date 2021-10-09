@@ -1,0 +1,12 @@
+Task - 1
+---------------------------
+	Setup the Gitrepository 
+		Sub Task 
+		---------------------------------	
+		a) - Add the  initial Android project
+		b) - Add the workspace for app design
+		c) - Add the workspace for Screen Shot
+		d) - Add the workspace for Task list and add Task 1
+		
+		
+	
