@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">BleDeviceScan</string>
+    <string name="app_name">BLE Scan</string>
+    <string name="permission_denied_forcefully">Permission Denied Forcefully</string>
+    <string name="location_permission_title">Location permission required</string>
+    <string name="location_permission_content">The system requires apps to be granted location access in order to scan for BLE devices.</string>
+    <string name="permission_denied_title">Permission Denied</string>
+    <string name="permission_denied_content">Permission denied forcefully. the system requires apps to be granted location access in order to scan for BLE devices. Click ok to grant permission from app settings.</string>
 </resources>
