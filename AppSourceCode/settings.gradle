@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "BleDeviceScan"
 include ':app'
+include ':core'
