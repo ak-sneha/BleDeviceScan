@@ -3,11 +3,16 @@ package com.example.blescan.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.blescan.framework.BleDeviceRepository
 import com.example.core.domain.BleDeviceInfo
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withTimeout
+import com.example.core.domain.IScanCallbacks
+import com.example.core.interactor.StartBleDeviceScan
+import com.example.core.interactor.StopBleDeviceScan
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class BleScanVM : ViewModel() {
+@HiltViewModel
+class BleScanVM @Inject constructor(private val repository: BleDeviceRepository) : ViewModel() {
 
     private var bleDevices = mutableListOf<BleDeviceInfo>()
 
@@ -26,29 +31,32 @@ class BleScanVM : ViewModel() {
     val bleDevicesUpdate: LiveData<List<BleDeviceInfo>> get() = devicesUpdate
 
     suspend fun getBleDevices() {
-        withTimeout(10000) {
-            bleDevices.addAll(createMockObjectList())
-            delay(10000)
-        }
-        devicesUpdate.postValue(bleDevices)
-    }
+        StartBleDeviceScan().get(repository, object : IScanCallbacks {
+            override fun scanStatus(status: Boolean) {
+                isScanning = status
+                scanProgress.postValue(isScanning)
+            }
 
-    private fun createMockObjectList(): List<BleDeviceInfo> {
-        val devices = mutableListOf<BleDeviceInfo>()
-        val signalStrength = -100
-        for (number in 1..10) {
+            override fun enableBluetooth() {
+                enableBle.postValue(true)
+            }
 
-            val bleDeviceInfo = BleDeviceInfo(
-                "Device$number",
-                "1A:2B:C3:D4:5E:Z$number",
-                signalStrength + (10 * number)
-            )
-            devices.add(bleDeviceInfo)
-        }
-        return devices
+            override fun requiredLocationPermission() {
+                requestLocPermission.postValue(true)
+            }
+
+            override fun scanCompleted(result: List<BleDeviceInfo>) {
+                bleDevices.clear()
+                bleDevices.addAll(result)
+                devicesUpdate.postValue(bleDevices)
+            }
+
+        })
     }
 
     fun stopBleScan() {
-
+        StopBleDeviceScan().stop(repository)
+        isScanning = false
+        scanProgress.postValue(isScanning)
     }
 }

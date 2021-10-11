@@ -1,6 +1,7 @@
 package com.example.blescan.presentation.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
@@ -11,18 +12,19 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.example.ble.requestPermission
 import com.example.blescan.R
+import com.example.blescan.presentation.extensions.requestPermission
+import com.example.blescan.presentation.viewmodel.BleScanVM
 import com.example.blescan.databinding.ActivityMainBinding
 import com.example.blescan.presentation.adapter.BleScanResultAdapter
-import com.example.blescan.presentation.viewmodel.BleScanVM
 import com.example.core.domain.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.alert
@@ -31,6 +33,7 @@ import timber.log.Timber
 private const val ENABLE_BLUETOOTH_REQUEST_CODE = 1
 private const val LOCATION_PERMISSION_REQUEST_CODE = 2
 
+@AndroidEntryPoint
 class BleScanActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -40,7 +43,10 @@ class BleScanActivity : AppCompatActivity() {
     private var isScanning = false
         set(value) {
             field = value
-            runOnUiThread { binding.scanButton.text = if (value) "Stop Scan" else "Start Scan" }
+            runOnUiThread {
+                binding.scanButton.text =
+                    if (value) getString(R.string.stop_scan) else getString(R.string.start_scan)
+            }
         }
 
     private val scanResultAdapter: BleScanResultAdapter by lazy {
@@ -48,15 +54,11 @@ class BleScanActivity : AppCompatActivity() {
     }
 
     private val enableBluetooth = Observer<Boolean> {
-        it.let {
-            promptEnableBluetooth()
-        }
+        promptEnableBluetooth()
     }
 
     private val requestLocationPermission = Observer<Boolean> {
-        it.let {
-            requestLocationPermission()
-        }
+        requestLocationPermission()
     }
 
     private val showScanProgress = Observer<Boolean> {
@@ -66,6 +68,7 @@ class BleScanActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private val bleDevicesUpdate = Observer<List<BleDeviceInfo>> {
         it.let {
             bleDevices.clear()

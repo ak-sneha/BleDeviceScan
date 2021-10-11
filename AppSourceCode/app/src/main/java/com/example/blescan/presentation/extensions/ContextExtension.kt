@@ -1,4 +1,4 @@
-package com.example.ble
+package com.example.blescan.presentation.extensions
 
 import android.app.Activity
 import android.content.Context
