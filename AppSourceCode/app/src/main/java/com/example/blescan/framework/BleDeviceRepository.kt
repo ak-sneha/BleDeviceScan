@@ -15,10 +15,12 @@ class BleDeviceRepository @Inject constructor(val dataSource: IBleDeviceDataSour
 
         if (dataSource.isBluetoothDisabled()) {
             status.enableBluetooth()
+            return
         }
 
         if (dataSource.isLocationPermissionRequired()) {
             status.requiredLocationPermission()
+            return
         }
 
         status.scanStatus(true)
