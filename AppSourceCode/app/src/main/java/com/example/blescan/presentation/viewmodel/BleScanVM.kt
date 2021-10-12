@@ -12,7 +12,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class BleScanVM @Inject constructor(private val repository: BleDeviceRepository) : ViewModel() {
+class BleScanVM @Inject constructor(
+    private val repository: BleDeviceRepository,
+    private val startScan: StartBleDeviceScan,
+    private val stopScan: StopBleDeviceScan
+) : ViewModel() {
 
     private var bleDevices = mutableListOf<BleDeviceInfo>()
 
@@ -31,7 +35,7 @@ class BleScanVM @Inject constructor(private val repository: BleDeviceRepository)
     val bleDevicesUpdate: LiveData<List<BleDeviceInfo>> get() = devicesUpdate
 
     suspend fun getBleDevices() {
-        StartBleDeviceScan().get(repository, object : IScanCallbacks {
+        startScan.get(repository, object : IScanCallbacks {
             override fun scanStatus(status: Boolean) {
                 isScanning = status
                 scanProgress.postValue(isScanning)
@@ -55,7 +59,7 @@ class BleScanVM @Inject constructor(private val repository: BleDeviceRepository)
     }
 
     fun stopBleScan() {
-        StopBleDeviceScan().stop(repository)
+        stopScan.stop(repository)
         isScanning = false
         scanProgress.postValue(isScanning)
     }

@@ -12,6 +12,7 @@ import com.example.blescan.presentation.extensions.hasPermission
 import com.example.blescan.framework.datasource.BleDeviceDataSource
 import com.example.blescan.framework.datasource.BleScanCallback
 import com.example.blescan.framework.datasource.BleScanConfigProvider
+import com.example.core.data.BleDataSourceHelper
 import io.mockk.every
 import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
@@ -31,6 +32,7 @@ class BleDeviceDataSourceTest {
     private lateinit var scanner: BluetoothLeScanner
     private lateinit var callback: BleScanCallback
     private lateinit var settings: ScanSettings
+    private lateinit var helper: BleDataSourceHelper
 
     @Before
     fun setup() {
@@ -41,6 +43,7 @@ class BleDeviceDataSourceTest {
         scanner = mock(BluetoothLeScanner::class.java)
         callback = mock(BleScanCallback::class.java)
         settings = mock(ScanSettings::class.java)
+        helper = mock(BleDataSourceHelper::class.java)
         `when`(context.getSystemService(Context.BLUETOOTH_SERVICE)).thenReturn(manager)
 
         `when`(manager.adapter).thenReturn(adapter)
@@ -50,7 +53,7 @@ class BleDeviceDataSourceTest {
     @Test
     fun testIsBluetoothEnabled() {
 
-        val dataProvider = BleScanConfigProvider(context, settings, callback)
+        val dataProvider = BleScanConfigProvider(context, helper, settings, callback)
         val bleDeviceDataSource = BleDeviceDataSource(dataProvider)
 
         `when`(dataProvider.bluetoothAdapter).thenReturn(adapter)
@@ -72,7 +75,7 @@ class BleDeviceDataSourceTest {
         setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), 23)
         mockkStatic("com.example.blescan.presentation.extensions.ContextExtensionKt")
 
-        val dataProvider = BleScanConfigProvider(context, settings, callback)
+        val dataProvider = BleScanConfigProvider(context, helper, settings, callback)
         val bleDeviceDataSource = BleDeviceDataSource(dataProvider)
 
         every {
@@ -99,7 +102,7 @@ class BleDeviceDataSourceTest {
         runBlocking {
             setFinalStatic(Build.VERSION::class.java.getField("SDK_INT"), 23)
 
-            val dataProvider = spy(BleScanConfigProvider(context, settings, callback))
+            val dataProvider = spy(BleScanConfigProvider(context, BleDataSourceHelper(), settings, callback))
             val bleDeviceDataSource = BleDeviceDataSource(dataProvider)
 
             bleDeviceDataSource.setScanTime(2000L)

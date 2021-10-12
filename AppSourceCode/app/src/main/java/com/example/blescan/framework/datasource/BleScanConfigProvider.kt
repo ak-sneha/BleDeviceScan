@@ -7,6 +7,7 @@ import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import com.example.blescan.presentation.extensions.hasPermission
+import com.example.core.data.IBleDataSourceHelper
 import javax.inject.Inject
 
 /**
@@ -14,6 +15,7 @@ import javax.inject.Inject
  */
 open class BleScanConfigProvider @Inject constructor(
     private val context: Context,
+    private val helper: IBleDataSourceHelper,
     private val scanSettings: ScanSettings,
     private val scanCallback: BleScanCallback
 ) {
@@ -35,4 +37,5 @@ open class BleScanConfigProvider @Inject constructor(
 
     fun getBleScanCallback() = scanCallback
 
+    fun getBleDataSourceHelper() = helper
 }

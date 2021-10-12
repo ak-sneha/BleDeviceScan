@@ -25,7 +25,7 @@ class BleDeviceDataSource @Inject constructor(private val scanConfigProvider: Bl
         }
         stopBleScan()
         val scanResults = scanConfigProvider.getBleScanCallback().getScanResults()
-        return BleDataSourceHelper().getSortedDevicesBySignalStrength(scanResults.map {
+        return scanConfigProvider.getBleDataSourceHelper().getSortedDevicesBySignalStrength(scanResults.map {
             Mapper().getBleDeviceInfo(it)
         })
     }
