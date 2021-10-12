@@ -1,0 +1,47 @@
+Application Design
+
+Use clean architecture for implementation of BLE Scan app. Design consist of 5 layers as follow:
+
+1. Presentation Layer
+2. Framework Layer
+3. Interactor Layer (Use Case Layer)
+4. Data Layer
+5. Domain Layer
+
+App consist of two modules.
+a) app module 
+	Consist of Presentation layer and Framework layer. These are more platform dependent. 
+b) core module
+	Consist of Interactor Layer, Data Layer and Domain Layer. These are more abstract implementation and not platform dependant.
+
+Details of implementation in each layer is as follow:
+1. Presentation Layer:
+	a) Used MVVM arhitecture pattern using Android LiveData ViewModel
+	b) BleScanActivity: Provides UI for BLE Scan app. Consist of "Start Scan"/"Stop Scan" toggle button. RecyclerView to show list of scanned devices. Show turn on bluetooth popup. Show location permission required popup. Handle scenario if location permission is denied forcefully. Navigate user to apps permission screen.
+	c) BleScanVM: ViewModel for BleScanActivity. Takes repository and use cases as constructor parameter. Communicates with the Use cases layer. Contains LiveData objects to update UI.
+	
+2. Framework Layer:
+	a) Consist of concrete implementation of data repository. Interacts with Android Platform to get data.
+	b) BleDeviceRepository: Concrete implementation fo IDeviceRepository of data layer. uses BleDeviceDataSource to get BLE devices.
+	c) BleDeviceDataSource: Concrete implementation of IBleDeviceDataSource od data layer. Performs scan of BLE devices and return the sorted list of BleDeviceInfo. Uses BleScanConfigProvider to get all BLE device scanning configurations.
+	d) BleScanConfigProvider: Provides all configurations required for BLE Device scanning.
+	
+3. Interactor Layer:
+	Consist of following use cases:
+	a) StartBleDeviceScan
+	b) StopBleDeviceScan
+	Uses IDeviceRepository to get the list scanned BLE devices. Also uses IScanCallbacks to give events back to BleScanVM.
+	
+4. Data Layer:
+	Abstract implementation of data repository and data sources. Consist of following interfaces whose implementation is provided by framework layer.
+	a) IDeviceRepository
+	b) IBleDeviceDataSource
+	c) IBleDataSourceHelper
+	
+5. Domain Layer:
+	More abstract implementation of business logic and contains domain level models. Consist of following model and interface.
+	a) BleDeviceInfo
+	b) IScanCallbacks
+	
+Dependencies are defined such that the most outer layer is dependent on the more recent inner layer. Please refer architecutre diagram to understand the dependencies.
+
