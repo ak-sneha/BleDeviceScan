@@ -7,6 +7,49 @@ Task - 1
 		b) - Add the workspace for app design
 		c) - Add the workspace for Screen Shot
 		d) - Add the workspace for Task list and add Task 1
-		
-		
+
+
+Task - 2
+---------------------------
+
+Add Core Module
+
+Task - 3
+---------------------------
+
+Implement UI 
+
+	Sub Task
+	---------------------------------
+	a) Add scan Start/Stop button
+	b) Add RecyclerView to show list of devices
+	c) Add Adapter with dummy string values
+	d) Create ViewModel to provide dummy device info list
+	e) Hanlde bluetooth On/Off and location permission
+
+Task - 4
+---------------------------
+
+Implement core module
+
+	Sub Task
+	---------------------------------
+	a) data layer: consist of IDeviceRepository IBleDevideDataSource, IBleDataSourceHelper
+	b) domain layer: consist of BleDeviceInfo model and IScanCallback
+	c) interactor layer: consist of use cases StartBleDeviceScan and StopBleDeviceScan
+
+	Updated app module
+	a) framework layer: Implementation of BleDeviceRepository, BleDeviceDataSource, BleScanConfiProvider
+	b) Added dependency injection using Hilt
+	c) presentation layer: Updated BleScanActivity an BleScanVM
+
+Task - 5
+---------------------------
+Implemented J-Unit test cases
+
+	Sub Task
+	---------------------------------
+	a) Unit tested BleDataSourceHelper
+	b) Unit tested BleDeviceDataSource
+
 	
