@@ -43,5 +43,5 @@ Details of implementation in each layer is as follow:
 	a) BleDeviceInfo
 	b) IScanCallbacks
 	
-Dependencies are defined such that the most outer layer is dependent on the more recent inner layer. Please refer architecutre diagram to understand the dependencies.
+Dependencies are defined such that the most outer layer is dependent on the more recent inner layer. Please refer architecutre diagram to understand the dependencies. Using Hilt for dependency injection and Timber for logging.
 
